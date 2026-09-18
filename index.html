@@ -226,7 +226,7 @@
   /* ---------- Subscribe ---------- */
   .subscribe-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
   .sub-card {
@@ -260,7 +260,7 @@
   @media (max-width: 800px) {
     .hero .wrap, .about .wrap { grid-template-columns: 1fr; gap: 40px; }
     .about .wrap { direction: ltr; }
-    .subscribe-grid { grid-template-columns: repeat(2, 1fr); }
+    .subscribe-grid { grid-template-columns: 1fr; }
     nav { display: none; }
     .ep-row { grid-template-columns: 44px 1fr; }
     .ep-play { grid-column: 1 / -1; margin-top: 4px; }
@@ -369,8 +369,7 @@
     </div>
     <div class="subscribe-grid">
       <a href="#" class="sub-card"><div class="glyph">♪</div><div class="name">Spotify</div></a>
-      <a href="#" class="sub-card"><div class="glyph">◐</div><div class="name">Apple Podcasts</div></a>
-      <a href="#" class="sub-card"><div class="glyph">▷</div><div class="name">YouTube</div></a>
+      <a href="https://podcasts.apple.com/podcast/id6813271319" class="sub-card"><div class="glyph">◐</div><div class="name">Apple Podcasts</div></a>
       <a href="https://media.rss.com/alchemist-s-book-coven/feed.xml" class="sub-card"><div class="glyph">⟁</div><div class="name">RSS Feed</div></a>
     </div>
   </div>
