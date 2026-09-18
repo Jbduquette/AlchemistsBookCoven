@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alchemist's Book Coven — A Podcast for Book Lovers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Karla:wght@400;500;600&family=Cormorant:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1B1220;
+    --bg-alt: #241729;
+    --surface: #2C1D32;
+    --surface-2: #38253F;
+    --parchment: #EDE0C4;
+    --parchment-dim: #b6a98f;
+    --gold: #C9A227;
+    --gold-bright: #E0BC4A;
+    --moss: #7E8F6C;
+    --line: rgba(237, 224, 196, 0.14);
+    --radius: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(126,143,108,0.08), transparent 55%),
+      radial-gradient(ellipse at 85% 30%, rgba(201,162,39,0.06), transparent 50%);
+    color: var(--parchment);
+    font-family: 'Karla', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  #constellation-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* lift real content above the canvas layer */
+  header, .hero, .about, .episodes, .subscribe, footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .caps {
+    font-family: 'Karla', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(27, 18, 32, 0.9);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; }
+  .brand .sigil { color: var(--gold); font-size: 1.3rem; }
+  nav { display: flex; gap: 30px; }
+  nav a { text-decoration: none; font-size: 0.82rem; color: var(--parchment-dim); letter-spacing: 0.03em; transition: color 0.2s; }
+  nav a:hover, nav a:focus-visible { color: var(--gold-bright); }
+  nav a:focus-visible { outline: 1px solid var(--gold-bright); outline-offset: 4px; }
+
+  .btn {
+    display: inline-block; padding: 11px 22px; border-radius: var(--radius);
+    font-size: 0.82rem; font-weight: 500; letter-spacing: 0.03em; text-decoration: none;
+    border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease;
+  }
+  .btn-primary { background: var(--gold); color: #1B1220; }
+  .btn-primary:hover { background: var(--gold-bright); transform: translateY(-1px); }
+  .btn-ghost { border-color: var(--line); color: var(--parchment); }
+  .btn-ghost:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+  .btn:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 96px 0 70px; border-bottom: 1px solid var(--line); position: relative; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+  .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--gold-bright); margin-bottom: 20px; }
+  .eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--gold-bright); }
+  .hero h1 { font-size: clamp(2.5rem, 4.8vw, 3.8rem); line-height: 1.06; margin-bottom: 22px; }
+  .hero h1 em { font-style: italic; color: var(--gold-bright); }
+  .hero p.lede { font-size: 1.08rem; color: var(--parchment-dim); max-width: 46ch; margin-bottom: 32px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* Now brewing card — signature element */
+  .brew-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 26px 26px 24px;
+    position: relative;
+  }
+  .brew-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 8px;
+    padding: 1px;
+    background: linear-gradient(150deg, rgba(201,162,39,0.35), transparent 40%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none;
+  }
+  .brew-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .brew-head .caps { color: var(--moss); }
+  .brew-head .pulse { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--moss); margin-right: 6px; animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .brew-seal {
+    width: 54px; height: 54px; border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-bright);
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .brew-title-row { display: flex; gap: 16px; align-items: center; margin-bottom: 18px; }
+  .brew-title-row h3 { font-size: 1.3rem; }
+  .brew-title-row .sub { color: var(--parchment-dim); font-size: 0.85rem; margin-top: 3px; }
+  .ingredients { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .ingredient {
+    font-size: 0.72rem; padding: 5px 11px; border-radius: 100px;
+    border: 1px solid var(--line); color: var(--parchment-dim);
+    letter-spacing: 0.02em;
+  }
+  .play-row { display: flex; align-items: center; gap: 14px; }
+  .play-btn {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--gold);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    cursor: pointer; border: none; transition: background 0.2s;
+  }
+  .play-btn:hover { background: var(--gold-bright); }
+  .play-btn svg { width: 14px; height: 14px; fill: #1B1220; margin-left: 2px; }
+  .scrub { flex: 1; height: 3px; background: var(--line); border-radius: 2px; position: relative; }
+  .scrub::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 28%; background: var(--gold); border-radius: 2px; }
+  .duration { font-family: 'Karla', sans-serif; font-size: 0.75rem; color: var(--parchment-dim); white-space: nowrap; }
+
+  /* ---------- Section shared ---------- */
+  section { padding: 90px 0; }
+  .section-head { margin-bottom: 50px; max-width: 58ch; }
+  .section-head .eyebrow { margin-bottom: 12px; }
+  .section-head h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+  .section-head p { color: var(--parchment-dim); margin-top: 14px; }
+
+  /* ---------- About ---------- */
+  .about { border-bottom: 1px solid var(--line); }
+  .about .wrap { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; align-items: center; }
+  .portrait {
+    aspect-ratio: 4/5; border-radius: 8px;
+    background:
+      linear-gradient(160deg, rgba(201,162,39,0.16), transparent 60%),
+      var(--surface);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .portrait .sigil-big { font-size: 4rem; color: var(--gold); opacity: 0.5; font-family: 'Cormorant Garamond', serif; }
+  .about-copy h3 { font-size: 1.7rem; margin-bottom: 6px; }
+  .about-copy .role { color: var(--gold-bright); font-size: 0.85rem; margin-bottom: 20px; letter-spacing: 0.02em; }
+  .about-copy p { color: var(--parchment-dim); margin-bottom: 14px; }
+  .about-copy p:last-of-type { margin-bottom: 0; }
+
+  /* ---------- Episodes ---------- */
+  .episodes { border-bottom: 1px solid var(--line); }
+  .ep-list { display: flex; flex-direction: column; gap: 14px; }
+  .ep-row {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px 22px;
+    display: grid;
+    grid-template-columns: 54px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .ep-row:hover { border-color: rgba(201,162,39,0.4); }
+  .ep-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-bright);
+    font-size: 1rem;
+  }
+  .ep-body h4 { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.15rem; margin-bottom: 5px; }
+  .ep-body .ep-ingredients { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ep-body .ingredient { font-size: 0.68rem; padding: 3px 9px; }
+  .ep-play { display: flex; align-items: center; gap: 14px; }
+  .ep-play .duration { font-size: 0.78rem; }
+  .ep-play .play-btn { width: 34px; height: 34px; }
+  .ep-play .play-btn svg { width: 11px; height: 11px; }
+
+  /* ---------- Subscribe ---------- */
+  .subscribe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .sub-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 24px 18px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .sub-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .sub-card:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+  .sub-card .glyph {
+    width: 40px; height: 40px; margin: 0 auto 14px;
+    border-radius: 50%; border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold-bright); font-family: 'Cormorant Garamond', serif; font-style: italic;
+  }
+  .sub-card .name { font-size: 0.85rem; color: var(--parchment); }
+
+  /* ---------- Footer ---------- */
+  footer { background: var(--surface); padding: 52px 0 30px; }
+  .footer-top {
+    display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px;
+    padding-bottom: 32px; border-bottom: 1px solid var(--line); margin-bottom: 22px;
+  }
+  .footer-top h3 { font-size: 1.5rem; max-width: 26ch; }
+  .footer-bottom { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--parchment-dim); flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 800px) {
+    .hero .wrap, .about .wrap { grid-template-columns: 1fr; gap: 40px; }
+    .about .wrap { direction: ltr; }
+    .subscribe-grid { grid-template-columns: repeat(2, 1fr); }
+    nav { display: none; }
+    .ep-row { grid-template-columns: 44px 1fr; }
+    .ep-play { grid-column: 1 / -1; margin-top: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="constellation-bg" aria-hidden="true"></canvas>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="sigil">☾</span> Alchemist's Book Coven</div>
+    <nav>
+      <a href="#episodes">Episodes</a>
+      <a href="#about">About</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+    <a href="#subscribe" class="btn btn-primary">Listen now</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow caps">A book club for the rest of us</div>
+      <h1>We read the book. We argue about it. We drink something <em>strange</em>.</h1>
+      <p class="lede">Alchemist's Book Coven is a monthly book club podcast for readers of every genre — cozy mysteries, gothic horror, fantasy doorstoppers, romance you're embarrassed to admit you loved. No gatekeeping, just good talk.</p>
+      <div class="hero-actions">
+        <a href="#subscribe" class="btn btn-primary">Subscribe free</a>
+        <a href="#episodes" class="btn btn-ghost">Browse episodes</a>
+      </div>
+    </div>
+
+    <div class="brew-card">
+      <div class="brew-head">
+        <span class="caps"><span class="pulse"></span>Now brewing</span>
+        <span class="caps" style="color:var(--parchment-dim);">Ep. 24</span>
+      </div>
+      <div class="brew-title-row">
+        <div class="brew-seal">XXIV</div>
+        <div>
+          <h3>The Villain Was Right, Actually</h3>
+          <div class="sub">Morally gray reads &amp; why we love them</div>
+        </div>
+      </div>
+      <div class="ingredients">
+        <span class="ingredient">Fantasy</span>
+        <span class="ingredient">Discussion</span>
+        <span class="ingredient">Spicy opinions</span>
+      </div>
+      <div class="play-row">
+        <button class="play-btn" aria-label="Play episode preview">
+          <svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg>
+        </button>
+        <div class="scrub"></div>
+        <span class="duration">14:02 / 51:18</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="portrait"><span class="sigil-big">☿</span></div>
+    <div class="about-copy">
+      <div class="eyebrow caps">Your host</div>
+      <h3>Hosted by Lili Duquette</h3>
+      <div class="role">Reader of everything · Rewatcher of nothing</div>
+      <p>Every month, Lili picks a book — sometimes a classic, sometimes something they found face-down in a used bookstore — and invites listeners to read along. No syllabus, no homework, just one honest conversation about whether the book actually worked.</p>
+      <p>Before this podcast, Lili was the friend who texted "chapter 14, we need to talk" at 1am. Now that energy has a microphone.</p>
+    </div>
+  </div>
+</section>
+
+<section class="episodes" id="episodes">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow caps">The archive</div>
+      <h2>Recent episodes</h2>
+      <p>New episodes drop once a month. Each one comes with its own reading — pick it up before you press play, or don't, we won't check.</p>
+    </div>
+    <div class="ep-list">
+
+      <div class="ep-row">
+        <div class="ep-num">XXIII</div>
+        <div class="ep-body">
+          <h4>A Locked Room, A Bad Alibi</h4>
+          <div class="ep-ingredients">
+            <span class="ingredient">Mystery</span>
+            <span class="ingredient">Guest: a former detective's kid</span>
+          </div>
+        </div>
+        <div class="ep-play">
+          <span class="duration">47:12</span>
+          <button class="play-btn" aria-label="Play episode 23"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
+        </div>
+      </div>
+
+      <div class="ep-row">
+        <div class="ep-num">XXII</div>
+        <div class="ep-body">
+          <h4>Slow Burn or Just Slow?</h4>
+          <div class="ep-ingredients">
+            <span class="ingredient">Romance</span>
+            <span class="ingredient">Pacing debate</span>
+          </div>
+        </div>
+        <div class="ep-play">
+          <span class="duration">55:40</span>
+          <button class="play-btn" aria-label="Play episode 22"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
+        </div>
+      </div>
+
+      <div class="ep-row">
+        <div class="ep-num">XXI</div>
+        <div class="ep-body">
+          <h4>The House Was Always the Point</h4>
+          <div class="ep-ingredients">
+            <span class="ingredient">Gothic horror</span>
+            <span class="ingredient">Reread episode</span>
+          </div>
+        </div>
+        <div class="ep-play">
+          <span class="duration">49:55</span>
+          <button class="play-btn" aria-label="Play episode 21"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
+        </div>
+      </div>
+
+      <div class="ep-row">
+        <div class="ep-num">XX</div>
+        <div class="ep-body">
+          <h4>Worldbuilding Is Not a Personality</h4>
+          <div class="ep-ingredients">
+            <span class="ingredient">Fantasy</span>
+            <span class="ingredient">Hot takes</span>
+          </div>
+        </div>
+        <div class="ep-play">
+          <span class="duration">61:03</span>
+          <button class="play-btn" aria-label="Play episode 20"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="subscribe" id="subscribe">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow caps">Join the coven</div>
+      <h2>Subscribe wherever you listen</h2>
+      <p>New episodes once a month. Follow so you don't miss the next read.</p>
+    </div>
+    <div class="subscribe-grid">
+      <a href="#" class="sub-card"><div class="glyph">♪</div><div class="name">Spotify</div></a>
+      <a href="#" class="sub-card"><div class="glyph">◐</div><div class="name">Apple Podcasts</div></a>
+      <a href="#" class="sub-card"><div class="glyph">▷</div><div class="name">YouTube</div></a>
+      <a href="https://media.rss.com/alchemist-s-book-coven/feed.xml" class="sub-card"><div class="glyph">⟁</div><div class="name">RSS Feed</div></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <h3>New episode, once a month. Come argue with us.</h3>
+      <a href="#subscribe" class="btn btn-primary">Subscribe free</a>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Alchemist's Book Coven</span>
+      <span>Sample site — swap in your real episodes, host bio, and links.</span>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  var canvas = document.getElementById('constellation-bg');
+  var ctx = canvas.getContext('2d');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var stars = [];
+  var STAR_COLOR = '237, 224, 196';   // parchment
+  var LINK_COLOR = '201, 162, 39';    // gold
+  var LINK_DIST = 130;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function sizeCanvas() {
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    canvas.width = w * DPR;
+    canvas.height = h * DPR;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    return { w: w, h: h };
+  }
+
+  function makeStars(w, h) {
+    var count = Math.round((w * h) / 9000);
+    count = Math.max(40, Math.min(count, 160));
+    var arr = [];
+    for (var i = 0; i < count; i++) {
+      arr.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.1 + 0.4,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.0006 + Math.random() * 0.0009,
+        drift: (Math.random() - 0.5) * 0.02
+      });
+    }
+    return arr;
+  }
+
+  var dims = sizeCanvas();
+  stars = makeStars(dims.w, dims.h);
+
+  window.addEventListener('resize', function () {
+    dims = sizeCanvas();
+    stars = makeStars(dims.w, dims.h);
+    if (reduceMotion) drawStatic();
+  });
+
+  function drawFrame(t) {
+    ctx.clearRect(0, 0, dims.w, dims.h);
+
+    // gentle drift + twinkle
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      s.y += s.drift * 0.15;
+      if (s.y > dims.h) s.y = 0;
+      if (s.y < 0) s.y = dims.h;
+    }
+
+    // connecting lines between nearby stars
+    for (var i = 0; i < stars.length; i++) {
+      for (var j = i + 1; j < stars.length; j++) {
+        var a = stars[i], b = stars[j];
+        var dx = a.x - b.x, dy = a.y - b.y;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < LINK_DIST) {
+          var alpha = (1 - dist / LINK_DIST) * 0.12;
+          ctx.strokeStyle = 'rgba(' + LINK_COLOR + ',' + alpha + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // stars themselves, twinkling
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var twinkle = 0.45 + Math.sin(t * s.speed + s.phase) * 0.4;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(' + STAR_COLOR + ',' + Math.max(0.1, twinkle) + ')';
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (!reduceMotion) requestAnimationFrame(drawFrame);
+  }
+
+  function drawStatic() {
+    ctx.clearRect(0, 0, dims.w, dims.h);
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(' + STAR_COLOR + ',0.55)';
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  if (reduceMotion) {
+    drawStatic();
+  } else {
+    requestAnimationFrame(drawFrame);
+  }
+})();
+</script>
+
+</body>
+</html>
