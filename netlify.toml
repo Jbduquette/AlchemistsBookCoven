@@ -1,0 +1,13 @@
+# Deploy from this machine: `node build.mjs` then `netlify deploy --prod --dir dist`.
+[build]
+  publish = "dist"
+
+# No long Cache-Control on /covers: Netlify applies custom headers to 404s too,
+# so a cover requested before it was uploaded would stay "missing" in browsers.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; frame-src https://player.rss.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"

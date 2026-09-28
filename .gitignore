@@ -1,0 +1,8 @@
+# Local Netlify folder
+.netlify
+
+# Build output (regenerate with `node build.mjs`)
+dist/
+
+# Copy of the original site; it already lives on the main branch
+source.html.html
