@@ -1,4 +1,4 @@
-# Deploy from this machine: `node build.mjs` then `netlify deploy --prod --dir dist`.
+# Deploy from this machine with `npm run deploy` (builds dist/, then runs the pinned netlify-cli).
 [build]
   publish = "dist"
 

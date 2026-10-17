@@ -1,0 +1,12 @@
+{
+  "name": "alchemists-book-coven",
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node build.mjs && node preview.mjs",
+    "deploy": "node build.mjs && netlify deploy --prod --dir dist"
+  },
+  "devDependencies": {
+    "netlify-cli": "27.10.0"
+  }
+}

@@ -154,7 +154,8 @@
   .latest .tags { margin-bottom: 20px; }
 
   .player-slot { min-height: 48px; }
-  .player-slot iframe { display: block; width: 100%; height: 393px; border: 1px solid var(--line); border-radius: 2px; background: var(--night); }
+  /* color-scheme matches the player page's (normal). A mismatch with the site's dark scheme makes Chrome paint a white backdrop under the player. */
+  .player-slot iframe { display: block; width: 100%; height: 393px; border: 1px solid var(--line); border-radius: 2px; background: var(--night); color-scheme: normal; }
   .play-facade {
     width: 100%; display: flex; align-items: center; gap: 14px;
     background: none; border: 1px solid var(--line-strong); color: var(--vellum);
@@ -838,6 +839,8 @@
     frame.src = 'https://player.rss.com/alchemist-s-book-coven?theme=dark&v=2';
     frame.title = 'Alchemist\'s Book Coven player';
     frame.allow = 'autoplay; clipboard-write; encrypted-media';
+    // No allow-top-navigation: the player can open links in new tabs but can never redirect this page.
+    frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation');
     frame.setAttribute('scrolling', 'no');
     slot.replaceChildren(frame);
   }
