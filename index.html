@@ -304,6 +304,8 @@
   .footer-top { display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; padding-bottom: 48px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
   .footer-top h2 { font-size: var(--t-2xl); max-width: 18ch; }
   .footer-bottom { display: flex; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; font-size: var(--t-xs); color: var(--vellum-dim); }
+  .footer-bottom a { color: var(--vellum); text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--line-strong); transition: color .2s, text-decoration-color .2s; }
+  .footer-bottom a:hover { color: var(--gold-hi); text-decoration-color: currentColor; }
 
   /* Sigil stroke drawing */
   .draw [data-d] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: ink 1.6s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 45ms + 150ms); }
@@ -841,6 +843,7 @@
     <div class="footer-bottom">
       <span>© 2026 Alchemist's Book Coven</span>
       <span>Hosted by Lili Duquette</span>
+      <span>Site by <a href="https://tarheelwebstudio.com" target="_blank" rel="noopener">Tar Heel Web Studio LLC</a></span>
     </div>
   </div>
 </footer>
